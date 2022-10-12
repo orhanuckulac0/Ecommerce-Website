@@ -1,0 +1,160 @@
+{% include 'header.html' %}
+
+<div class="container mt-5 px-2">
+      <div class="row d-flex justify-content-center mb-2" style="padding: 0px; margin: 0px;">
+        <h4 class="text-muted" style="text-align: center;">Inventory</h4>
+        <hr class="text-muted">
+      </div>
+
+        <div class="row d-flex mb-2">
+            <div class="col col-lg-3 justify-content-start">
+              <form action="{{ url_for('search_inventory') }}" method="POST">
+                <div class="input-group">
+                  <input class="form-control form-control shadow-none px-3" type="text" name="input_text" placeholder="Search by product title">
+                  <button class="btn btn-dark btn-sm shadow-none px-3" type="submit"><i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="col justify-content-end ms-auto me-1" style="max-width: 250px;">
+              <form action="{{ url_for('inventory_filter') }}" method="POST">
+                <div class="input-group">
+                <select class="form-select" name="filter_by" id="select_filter" aria-label="Default select example">
+                  <option selected value="None" disabled>Filter by</option>
+                  <option value="filter_price_asc">Price Ascending</option>
+                  <option value="filter_price_desc">Price Descending</option>
+                  <option value="filter_stock_asc">Stock Ascending</option>
+                  <option value="filter_stock_desc">Stock Descending</option>
+                  <option value="filter_category">Category</option>
+                  <option value="filter_identifier">Identifier</option>
+                </select>
+                <button class="btn btn-success ms-2" type="submit" id="select_filter_submitBtn" disabled><i class="fa-solid fa-check"></i></button>
+                </div>
+              </form>
+            </div>
+        </div>
+
+      <div class="table-responsive table-bordered">
+          <table class="table table-responsive" style="border-color: #ECECEC;">
+            <thead>
+              <tr class="" style="background-color: #ECECEC;">
+                <th scope="col" width="2%">#</th>
+                <th scope="col" width="15%">Product Identifier</th>
+                <th scope="col" width="35%">Title</th>
+                <th scope="col" width="10%">Category</th>
+                <th scope="col" width="10%">Price</th>
+                <th scope="col" width="10%">Stock</th>
+                <th scope="col" width="10%" style="text-align:center;"><span>Action</span></th>
+              </tr>
+            </thead>
+            <tbody class="align-middle">
+
+            {% for product in products: %}
+            <form action="{{ url_for('update_inventory') }}" method="POST">
+
+              <tr>
+                <td class="text-muted"> {{ loop.index }}</td>
+                <td>{{ product.product_identifier }}</td>
+                <td>
+                    <a href="{{ url_for('product', id=product.id, product_identifier=product.product_identifier) }}" style="text-decoration: none; color:black;">
+                      <img src="/{{ product.main_img_path }}" class="img-fluid rounded me-3" style="width:50px;" alt="image"><span class="title-span">{{ product.title }}</span></a>
+                </td>
+                <td class="text-capitalize">{{ product.product_type }}</td>
+                <td><input type="text"
+                           class="form-control"
+                           min="0"
+                           maxlength="4"
+                           name="price"
+                           placeholder="${{ product.price }}"
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                           style="max-width:80px;">
+                </td>
+                <td><input type="text"
+                           class="form-control"
+                           aria-describedby="Stock"
+                           placeholder="{{ product.stock }}"
+                           name="stock"
+                           maxlength="4"
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                           onkeydown="if(event.key==='.'){event.preventDefault();}"
+                           style="max-width:80px;">
+                </td>
+
+                <input type="hidden" class="form-control" name="product_identifier" value="{{ product.product_identifier }}">
+                <input type="hidden" class="form-control" name="product_id" value="{{ product.id }}">
+
+                <td>
+                  <div class="d-flex justify-content-start">
+                    <button class="btn btn-sm btn-success me-2" type="submit" name="action" value="update_price_stock"><i class="fa-solid fa-check"></i></button>
+                    <button class="btn btn-sm btn-warning me-2" type="button" data-bs-toggle="modal" data-bs-target="#updateDetails{{product.product_identifier}}"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="btn btn-sm btn-danger me-2" type="submit" name="action" value="delete"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+                      <!-- Modal -->
+            <div class="modal fade" id="updateDetails{{ product.product_identifier }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Current Product Details {{ product.product_identifier }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row g-3">
+                      <div class="col">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" name="product_title" placeholder="{{ product.title }}" aria-label="Title">
+                      </div>
+                    </div>
+
+                    <div class="mb-3 mt-4">
+                        <label class="form-label">Product Description</label>
+                        <input type="text" class="form-control mb-2" name="descr1" placeholder="{{ product.description1 }}">
+                        <input type="text" class="form-control mb-2" name="descr2" placeholder="{{ product.description2 }}">
+                        <input type="text" class="form-control" name="descr3" placeholder="{{ product.description3 }}">
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="action" value="update_details" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+
+            {% endfor %}
+            </tbody>
+          </table>
+
+      </div>
+</div>
+<script>
+  const select = document.getElementById('select_filter');
+  const submitButton = document.getElementById('select_filter_submitBtn');
+  document.getElementById('select_filter').addEventListener('change', () => {
+    if (select.value === 'None') {
+      submitButton.disabled = true;
+    }else {
+      submitButton.disabled = false;
+    }
+  });
+</script>
+
+
+<style>
+.table thead th {
+  border-bottom: none;
+}
+
+.title-span {
+    display: inline-block;
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    }
+
+</style>

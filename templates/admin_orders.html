@@ -1,0 +1,115 @@
+{% include "header.html" %}
+
+<div class="container mt-5">
+          <!-- /Customer Sidebar-->
+  <div class="row d-flex justify-content-center mb-2" style="padding: 0px; margin: 0px;">
+    <h4 class="text-muted" style="text-align: center;">Orders</h4>
+    <hr class="text-muted">
+  </div>
+
+  <div class="col">
+    <div class="row d-flex mb-2">
+      <div class="col col-lg-3 justify-content-start">
+              <form action="{{ url_for('admin_search_order') }}" method="POST">
+                <div class="input-group">
+                  <input class="form-control form-control shadow-none px-3" type="text" name="input_text" placeholder="Search by Order Number">
+                  <button class="btn btn-dark btn-sm shadow-none px-3" type="submit"><i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                </div>
+              </form>
+            </div>
+
+      <div class="col justify-content-end ms-auto me-1" style="max-width: 250px;">
+        <form action="{{ url_for('orders_filter') }}" method="POST">
+          <div class="input-group">
+          <select class="form-select" name="filter_by" id="select_filter" aria-label="Default select example">
+            <option value="None" selected disabled>Filter by</option>
+            <option value="all_orders">All Orders</option>
+            <option value="date_ascending">Date Ascending</option>
+            <option value="date_descending">Date Descending</option>
+<!--            <option value="shipment_status">Shipment Status</option>-->
+          </select>
+          <button class="btn btn-success ms-2" type="submit" id="select_filter_submitBtn" disabled><i class="fa-solid fa-check"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="table-responsive table-bordered">
+      <table class="table table-responsive" style="border-color: #ECECEC;">
+        <thead class="bg-light">
+          <tr style="background-color: #ECECEC;">
+            <th scope="col" width="2%" class="py-4">#</th>
+            <th scope="col" width="10%" class="py-4">Order Number</th>
+            <th scope="col" width="10%" class="py-4 text-center">Date</th>
+            <th scope="col" width="15%" class="py-4 text-center">Customer / ID</th>
+            <th scope="col" width="5%" class="py-4 text-center">Total</th>
+            <th scope="col" width="10%" class="py-4 text-center">Payment Status</th>
+            <th scope="col" width="10%" class="py-4" style="text-align:center;">Order Status</th>
+            <th scope="col" width="15%" class="py-4" style="text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for order in orders: %}
+          <tr>
+            <td class="py-4 align-middle text-center">{{ loop.index }}</td>
+            <td class="py-4 align-middle">
+              <a class="btn"
+                 href="{{ url_for('admin_show_order', order_number=order.order_number, user_id=order.user_id) }}"
+                 style="margin-left: 0; padding-left: 0; text-decoration: none; color: black;">
+                <strong>#{{ order.order_number }}</strong>
+              </a>
+            </td>
+            <td class="py-4 align-middle text-center">{{ order.order_date.split()[0] }}</td>
+            <td class="py-4 align-middle text-center">{{ order.customer_name.capitalize() }} {{ order.customer_surname.capitalize() }} <strong>/</strong> {{ order.user_id }}</td>
+            <td class="py-4 align-middle text-center">${{ order.total_order_value }}</td>
+            {% if order.payment_status == "succeeded" %}
+            <td class="py-4 align-middle text-center"><h5 class="mt-2"><span class="badge p-2 bg-success">{{ order.payment_status.capitalize() }}</span></h5></td>
+            {% elif order.payment_status == "pending" %}
+            <td class="py-4 align-middle text-center"><label class="badge p-2 bg-warning">{{ order.payment_status }}</label></td>
+            {% elif order.payment_status == "cancelled" %}
+            <td class="py-4 align-middle badge p-2 bg-danger text-center">{{ order.payment_status }}</td>
+            {% endif %}
+
+            {% if order.shipment_status == "Shipped" %}
+            <td class="py-4 align-middle text-center"><h5 class="mt-2"><span class="badge p-2 bg-success">{{ order.shipment_status }}</span></h5></td>
+            {% elif order.shipment_status == "Being Prepared" %}
+            <td class="py-4 align-middle text-center"><h5 class="mt-2"><span class="badge p-2 bg-warning">{{ order.shipment_status }}</span></h5></td>
+            {% elif order.shipment_status == "Partial Shipped" %}
+            <td class="py-4 align-middle text-center"><h5 class="mt-2"><span class="badge p-2 bg-primary">Partial Shipped</span></h5></td>
+            {% elif order.shipment_status == "Partial Cancel" or order.shipment_status == "Cancelled"%}
+            <td class="py-4 align-middle text-center"><h5 class="mt-2"><span class="badge p-2 bg-danger">{{ order.shipment_status }}</span></h5></td>
+            {% endif %}
+
+            <td class="py-4 align-middle" style="margin-right: 0; padding-right:0">
+              <div class="d-flex justify-content-center">
+              <a class="btn btn-outline-success me-3" href="{{ url_for('admin_show_order', order_number=order.order_number, user_id=order.user_id) }}">View</a>
+              <a class="btn btn-outline-danger" href="{{ url_for('order_detail_page', order_number=order.order_number) }}">Cancel</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.table thead th {
+  border-bottom: none;
+}
+</style>
+
+<script>
+  const select = document.getElementById('select_filter');
+  const submitButton = document.getElementById('select_filter_submitBtn');
+  document.getElementById('select_filter').addEventListener('change', () => {
+    if (select.value === 'None') {
+      submitButton.disabled = true;
+    }else {
+      submitButton.disabled = false;
+    }
+  });
+</script>

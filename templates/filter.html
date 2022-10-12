@@ -1,0 +1,131 @@
+<div class="filter">
+    <button class="btn btn-success d-block d-lg-none mt-3 mb-3"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu"
+            aria-expanded="false"
+            aria-controls="mobile-filter"
+     style="margin: auto;">Filter <i class="fa-solid fa-filter"></i></button>
+</div>
+  <nav id="sidebarMenu" class="col-lg-3 collapse d-lg-block sidebar collapse bg-white mb-4">
+    <div class="position-sticky container ms-4">
+      <form action="{{ url_for('handle_user_filter') }}" method="POST">
+        <!-- Price Start -->
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-4" style="color:black;">Filter by price</h5>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="price_filter" value="All-Prices" id="all-prices" checked>
+            <label class="form-check-label ps-2" for="all-prices">All Prices</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="price_filter" value="0 100" id="price-1">
+            <label class="form-check-label ps-2" for="price-1">$0 - $100</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="price_filter" value="100 200" id="price-2">
+            <label class="form-check-label ps-2" for="price-2">$100 - $200</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="price_filter" value="200 300" id="price-3">
+            <label class="form-check-label ps-2" for="price-3">$200 - $300</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="price_filter" value="300 400" id="price-4">
+            <label class="form-check-label ps-2" for="price-4">$300 - $400</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start">
+            <input class="form-check-input" type="radio" name="price_filter" value="400 500" id="price-5">
+            <label class="form-check-label ps-2" for="price-5">$400 - $500</label>
+          </div>
+        </div>
+        <!-- Price End -->
+
+        <!-- Color Start -->
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-4" style="color:black;">Filter by color</h5>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="All-Colors" id="color-all" checked>
+            <label class="form-check-label ps-2" for="color-all">All Colors</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="Black" id="color-1">
+            <label class="form-check-label ps-2" for="color-1">Black</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="White" id="color-2">
+            <label class="form-check-label ps-2" for="color-2">White</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="Red" id="color-3">
+            <label class="form-check-label ps-2" for="color-3">Red</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="Blue" id="color-4">
+            <label class="form-check-label ps-2" for="color-4">Blue</label>
+          </div>
+          <div class="form-check d-flex align-items-start justify-content-start mb-2">
+            <input class="form-check-input" type="radio" name="color_filter" value="Green" id="color-5">
+            <label class="form-check-label ps-2" for="color-5">Green</label>
+          </div>
+        </div>
+        <!-- Color End -->
+
+        <button type="submit" id="submitBtn" class="btn btn-success mt-1 mb-3" disabled>Filter by price</button>
+      </form>
+    </div>
+  </nav>
+
+<script>
+    var inputElems = document.getElementsByClassName("form-check-input");
+        for (var i = inputElems.length - 1; i >= 0; --i) {
+          var elem = inputElems[i];
+          elem.onchange = function () {
+            document.getElementById("submitBtn").removeAttribute("disabled");
+          };
+    }
+</script>
+
+<style>
+  body {
+  background-color: #fbfbfb;
+}
+
+@media (max-width: 575.98px) {
+    .sidebar {
+
+      }
+}
+
+
+@media (min-width: 768px) {
+    .sidebar {
+     max-width: 200px;
+     margin-top: 50px;
+     margin-right: 10px;
+      }
+}
+
+
+
+/* Sidebar */
+.sidebar {
+  float: left;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 58px 0 0; /* Height of navbar */
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+</style>

@@ -1,0 +1,290 @@
+{% include 'header.html' %}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: black;">
+  <div class="container-fluid d-flex justify-content-center align-items-center">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-auto">
+        <li class="nav-item dropdown category-dropdown me-3">
+          <a class="nav-link text-white" href="#" role="button"
+            aria-expanded="false">
+            Fiberglass
+          </a>
+        </li>
+        <li class="nav-item dropdown category-dropdown me-3">
+          <a class="nav-link text-white" href="#" role="button"
+            aria-expanded="false">
+            Metal
+          </a>
+        </li>
+        <li class="nav-item dropdown category-dropdown me-3">
+          <a class="nav-link text-white" href="#" role="button"
+            aria-expanded="false">
+            Bamboo
+          </a>
+        </li>
+        <li class="nav-item dropdown category-dropdown me-3">
+          <a class="nav-link text-white" href="#" role="button"
+            aria-expanded="false">
+            Wooden
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+                       <!--PRODUCT SECTION-->
+<section class="py-5 test-back">
+    <div class="container card-test px-4 px-lg-5 my-2" style="border: 1px solid #eee;">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-lg-6 col-md-12 col-sm-12 border-end main-img-border">
+                <div class="d-flex flex-column justify-content-center">
+                      <div class="main_image-test">
+                          <img src="/{{ product_to_show.main_img_path }}" onclick="changeImage(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"  id="ProductImages" width="400">
+                      </div>
+                      <div class="thumbnail_images me-3">
+                        <ul id="thumbnails">
+                          <li><img onclick="changeImage(this)" src="/{{ product_to_show.main_img_path }}" width="50"></li>
+                          <li><img onclick="changeImage(this)" src="/{{ product_to_show.second_img_path }}" width="50"></li>
+                          <li><img onclick="changeImage(this)" src="/{{ product_to_show.third_img_path }}" width="50"></li>
+                          <li><img onclick="changeImage(this)" src="/{{ product_to_show.fourth_img_path }}" width="50"></li>
+                          <li><img onclick="changeImage(this)" src="/{{ product_to_show.fifth_img_path }}" width="50"></li>
+                        </ul>
+                      </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-touch="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                          <div class="carousel-inner">
+                            <div class="carousel-item active">
+                              <img onclick="changeImage(this)" src="/{{ product_to_show.main_img_path }}" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                              <img onclick="changeImage(this)" src="/{{ product_to_show.second_img_path }}" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                              <img onclick="changeImage(this)" src="/{{ product_to_show.third_img_path }}" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                              <img onclick="changeImage(this)" src="/{{ product_to_show.fourth_img_path }}" class="d-block w-100">
+                            </div>
+                            <div class="carousel-item">
+                              <img onclick="changeImage(this)" src="/{{ product_to_show.fifth_img_path }}" class="d-block w-100">
+                            </div>
+
+                          </div>
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="color:black;">
+                           <i class="fa-sharp fa-solid fa-arrow-left arrow-left" style="color:red;"></i>
+                            <span class="visually-hidden">Previous</span>
+                          </button>
+                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                           <i class="fa-sharp fa-solid fa-arrow-right arrow-right" style="color:red;"></i>
+                            <span class="visually-hidden">Next</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <hr class="fw-bold d-block d-lg-none" style="border: 1px solid;">
+                <form action="{{ url_for('handle_user', id=product_to_show.id, product_identifier=product_to_show.product_identifier) }}" method="POST">
+                    <div class="d-flex justify-content-between">
+                            <h3 class="">
+                                {{ product_to_show.title }}
+                            </h3>
+                    </div>
+
+                    <div class="fs-5 pb-3">
+                        <span>Price:</span>
+                        <a><span>${{ product_to_show.price }}</span></a>
+                        <input type="hidden" name="price" value="{{ product_to_show.price }}">
+                    </div>
+
+                    <div class="row d-flex pb-3">
+                        <div class="col">
+                            <h6>Color <a style="color: gray;"></a></h6>
+                                <div class="dropdown">
+                                  <a class="btn btn-outline-dark dropdown-toggle"
+                                     href="#" role="button"
+                                     style="min-width:150px;"
+                                     id="dropdownMenuLink"
+                                     data-bs-toggle="dropdown"
+                                     aria-expanded="false">
+                                    {{ selected_color }}
+                                  </a>
+                                  <ul class="dropdown-menu" style="background-color: white;" aria-labelledby="dropdownMenuLink">
+                                    <li style="background-color: white;" aria-selected="true">
+                                        <a class="dropdown-item" href="{{ url_for('product', id=parent_product.id, product_identifier=parent_product.product_identifier) }}" name="{{ color }}">{{ color }}</a>
+                                    </li>
+                                      {% for key, value in var_color.items() %}
+                                        <li style="background-color: white;"><a class="dropdown-item" href="{{ url_for('show_variation_product', id=key.id, product_identifier=key.product_identifier) }}" name="{{ key }}">{{ value }}</a></li>
+                                      {% endfor %}
+                                  </ul>
+                                </div>
+                        </div>
+
+                        <div class="col">
+                            <h6>Quantity <a style="color: gray;"></a></h6>
+                            {% if stock == 0: %}
+                            <select class="form-select" name="quantity" aria-label="Default select example" style="max-width: 10rem;">
+                                  <option value="Out of Stock" disabled>Out of Stock</option>
+                            </select>
+                            {% else: %}
+
+                            <select class="form-select" name="quantity" aria-label="Default select example" style="max-width: 10rem;" required>
+                                {% if stock == 10 or stock < 10: %}
+                                    {% for n in range(stock) %}
+                                      <option value="{{ n+1 }}">{{ n+1 }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for n in range(10) %}
+                                      <option value="{{ n+1 }}">{{ n+1 }}</option>
+                                    {% endfor %}
+                                {% endif %}
+
+                            </select>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="pb-3">
+                        <h6>Product Info</h6>
+                        <a> {{ product_to_show.description1 }}</a><br>
+                        <a> {{ product_to_show.description2 }}</a><br>
+                        <a> {{ product_to_show.description3 }}</a>
+
+                    </div>
+
+                    <p><b>Delivery:</b> 14 days</p>
+                    <div class="button-container">
+                        <div class="d-flex bd-highlight mb-3">
+                           <a type="button" class="btn btn-success buy-now-button me-auto p-2 bd-highlight">Buy Now</a>
+                           {% if stock == 0: %}
+                           <button class="btn btn-dark" name="activity" value="add_to_cart" type="submit" disabled>
+                               <i class="fa-solid fa-cart-shopping"></i>
+                               Add to cart
+                           </button>
+                           {% else: %}
+                           <button class="btn btn-dark p-2 bd-highlight" name="activity" value="add_to_cart" type="submit">
+                               <i class="fa-solid fa-cart-shopping"></i>
+                               Add to cart
+                           </button>
+                           {% endif %}
+                           {% if fav_status == "Added" %}
+                               <button class="btn btn btn-outline-dark ms-auto p-2 bd-highlight" name="activity" value="remove_fav" type="submit"><i class="fa-solid fa-heart fa-lg" style="color:red;"></i></button>
+                           {% else: %}
+                               <button class="btn btn btn-outline-dark ms-auto p-2 bd-highlight" name="activity" value="add_fav" type="submit"><i class="fa-regular fa-heart fa-lg" style="color:red;"></i></button>
+                           {% endif %}
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function changeImage(element) {
+              var main_product_image = document.getElementById('ProductImages');
+              main_product_image.src = element.src;
+        }
+    var multipleCardCarousel = document.querySelector(
+      "#carouselExampleControls2"
+    );
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      var carousel = new bootstrap.Carousel(multipleCardCarousel, {
+        interval: false,
+      });
+      var carouselWidth = $(".carousel-inner")[0].scrollWidth;
+      var cardWidth = $(".carousel-item").width();
+      var scrollPosition = 0;
+      $("#carouselExampleControls2 .carousel-control-next").on("click", function () {
+        if (scrollPosition < carouselWidth - cardWidth * 4) {
+          scrollPosition += cardWidth;
+          $("#carouselExampleControls2 .carousel-inner").animate(
+            { scrollLeft: scrollPosition },
+            600
+          );
+        }
+      });
+      $("#carouselExampleControls2 .carousel-control-prev").on("click", function () {
+        if (scrollPosition > 0) {
+          scrollPosition -= cardWidth;
+          $("#carouselExampleControls2 .carousel-inner").animate(
+            { scrollLeft: scrollPosition },
+            600
+          );
+        }
+      });
+    } else {
+      $(multipleCardCarousel).addClass("slide");
+    }
+
+</script>
+
+
+
+
+<style>
+@media (max-width: 991.98px) {
+  .main-img-border {
+    border-style : hidden!important;
+  }
+}
+
+.card-test {
+    border: none;
+    overflow: hidden
+}
+.thumbnail_images ul{
+    list-style: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-top:10px;
+}
+.thumbnail_images ul li{
+    margin: 5px;
+    padding: 10px;
+    border: 2px solid #eee;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+.thumbnail_images ul li:hover{
+    border: 2px solid #000;
+}
+.main_image-test {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    height: 400px;
+    width: 100%;
+    overflow: hidden;
+}
+.arrow-left {
+    font-size: 30px;
+}
+.arrow-right {
+    font-size: 30px;
+}
+
+</style>

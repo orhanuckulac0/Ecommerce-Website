@@ -1,0 +1,115 @@
+{% include "header.html" %}
+
+<div class="container mt-5">
+  {% include "profile_info_left.html" %}
+  <!-- /Customer Sidebar-->
+    <div class="col-lg-8 col-xl-9">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class=flashes style="padding-left:10px;">
+          {% for cart, message in messages %}
+            <li class="{{ cart }} fw-bold" style="color:red;">{{ message }}<br></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+
+      {% if not fav_products == "empty" %}
+        {% for f_product in fav_products: %}
+        <div class="card">
+          <div class="card-header py-3">
+          <h5 class="mb-0">My Favourite Item {{ loop.index0+1 }} </h5>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Image -->
+                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                  <a href="{{ url_for('product', id=f_product.product_id, product_identifier=f_product.product_identifier) }}">
+                    <img src="/{{ f_product.main_img_path }}"
+                    class="w-100">
+                  </a>
+                </div>
+                <!-- Image -->
+              </div>
+
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                <!-- Product Information -->
+                <a href="{{ url_for('product', id=f_product.product_id, product_identifier=f_product.product_identifier) }}" style="text-decoration:none; color:black;"><strong> {{ f_product.title }}</strong></a>
+                <p>Color: {{ f_product.color }}</p>
+                <p>Quantity: {{ f_product.quantity }} </p>
+                <p>Total Price: <strong>${{ f_product.total_price }}</strong></p>
+
+                <!--       Buttons         -->
+                <div class="d-flex justify-content-end">
+                  <a href="{{ url_for('fav_to_cart', fav_id=f_product.id, product_id=f_product.product_id, product_identifier=f_product.product_identifier, user_id=current_user.id) }}" class="btn btn-success me-1 mb-2" type="button" data-mdb-toggle="tooltip"
+                    title="Send to Cart">
+                      <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#EditFav{{f_product.id}}" class="btn btn-warning btn-info me-1 mb-2" data-mdb-toggle="tooltip"
+                  title="Edit item">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </a>
+                  <a href="{{ url_for('remove_fav', fav_id=f_product.id, product_id=f_product.product_id, product_identifier=f_product.product_identifier, user_id=current_user.id) }}" type="button" class="btn btn-danger me-1 mb-2" data-mdb-toggle="tooltip"
+                    title="Remove item">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                  <a type="button" class="btn btn-primary mb-2" data-mdb-toggle="tooltip"
+                    title="Send link">
+                    <i class="fa-solid fa-link"></i>
+                  </a>
+                </div>
+                <!--       Buttons ENDS        -->
+
+                                          <!-- Modal for Edit Favourite Item -->
+                  <div class="modal fade" id="EditFav{{f_product.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EditFavLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="EditFavLabel">Update: Quantity</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('edit_fav', fav_id=f_product.id, product_identifier=f_product.product_identifier, user_id=current_user.id) }}" method="POST">
+                            <div class="row mt-2">
+
+                              <div class="col-md-6 pt-2">
+                              <h6>Quantity <a style="color: gray;"></a></h6>
+                              <select class="form-select" name="quantity" aria-label="Default select example" style="max-width: 10rem;" required>
+                                    <option selected disabled>{{f_product.quantity}}</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                              </select>
+                              </div>
+                            </div>
+
+                          <div class="modal-footer" style="float: left; margin-left: 0; padding-left: 0;">
+                            <button type="submit" class="btn btn-success" style="margin-left: 0;">Save changes</button>
+                          </div>
+
+                          </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                    <!-- Modal ENDS -->
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        {% else: %}
+          <h5>Your fav section is empty</h5>
+        {% endif %}
+    </div>
+  </div>
+</div>

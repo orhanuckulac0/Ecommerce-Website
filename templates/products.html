@@ -1,0 +1,122 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+{% include 'filter.html' %}
+<!--Main Navigation-->
+  <!-- Sidebar -->
+<div class="container text-center py-5" style="background-color: #ECECEC;">
+    <div class="row pb-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul class=flashes style="padding-left:10px;">
+              {% for cart, message in messages %}
+                <li class="{{ cart }} fw-bold" style="color:red;">{{ message }}<br></li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+
+    <div class="row">
+        {% for product in products %}
+          <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card product-card h-100">
+              <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
+                data-mdb-ripple-color="light">
+                <a href="{{ url_for('product', id=product.id, product_identifier=product.product_identifier) }}"><img src="{{ product.main_img_path }}"
+                  class="w-100 product-card-img text-center" /></a>
+              </div>
+              <div class="card-body" style="padding-bottom: 10px;">
+                <div class="ms-auto text-warning text-center mb-2">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                  <h5 class="mb-0">{{ product.title }}</h5>
+                  <h5 class="text-dark mb-0">${{ product.price }}</h5>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-danger btn-sm" type="button"
+                       href="{{ url_for('add_fav',
+                         product_id=product.id,
+                          product_identifier=product.product_identifier,
+                           price=product.price,
+                            color='None Selected',
+                             quantity=1,
+                              total_price=product.price) }}"
+                    >
+                        <i class="fa-solid fa-heart"></i>
+                    </a>
+                    {% if product.stock == 0: %}
+                    <button class="btn" disabled><i class="fa-solid fa-cart-shopping"></i></button>
+                    {% else: %}
+                    <a class="btn btn-success btn-sm" type="button"
+                       href="{{ url_for('add_to_cart',
+                        product_id=product.id,
+                         product_identifier=product.product_identifier,
+                          price=product.price,
+                           color='None Selected',
+                            quantity=1,
+                             total_price=product.price) }}"
+                    >
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+    </div>
+
+
+    </div>
+</div>
+<!-- Shop Product End -->
+
+<style>
+  body {
+  background-color: #ECECEC;
+  }
+@media (min-width: 991.98px) {
+  main {
+    padding-left: 240px;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  float: left;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 58px 0 0; /* Height of navbar */
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+</style>

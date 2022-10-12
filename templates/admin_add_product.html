@@ -1,0 +1,147 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+
+<section class="vh-100 add-task-custom">
+  <div class="container py-5 h-80">
+    <div class="row d-flex justify-content-center align-items-center">
+
+      <div class="col col-xl-10">
+        <div class="card" style="border: 1px solid gray;">
+          <div class="card-body p-5">
+            <h4 class="text-center pb-3"> Please fill the form to add product </h4>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <ul class=flashes style="padding-left:10px;">
+                {% for add_product_flash, message in messages %}
+                  <li class="{{ add_product_flash }} fw-bold" style="color:red;">{{ message }}<br></li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+
+            <form class="d-flex justify-content-center align-items-center mb-4"
+                  action="{{ url_for('add_product') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+              <div class="flex-fill">
+                  <label class="fw-bold">Is this a variation product?</label>
+
+                <div class="form-check d-flex justify-content-start mb-3">
+                  <input class="form-check-input me-2" type="radio" name="variation" value="Child" onclick="showInputYes()" >
+                  <label class="me-5">Yes</label>
+                  <input class="form-check-input me-2" type="radio" name="variation" value="Parent" onclick="showInputNo()" >
+                  <label class="">No</label>
+                </div>
+
+                <div class="mb-3" id="show" style="display: none;">
+                  <label for="title">Parent Product Identifier:</label>
+                  <input type="text" class="form-control" maxlength="20" name="parent_product_identifier">
+                </div>
+                <!--        Title Input        -->
+                <label for="title">Product Title:</label>
+                <input type="text" class="form-control" name="title" >
+
+
+                <!--        Description Input        -->
+                <label style="margin-top:20px;" for="description">Product Description:</label>
+                <input type="text" name="description1" placeholder="Bullet Point 1" class="form-control pt-2 mt-2" />
+                <input type="text" name="description2" placeholder="Bullet Point 2" class="form-control pt-2 mt-2" />
+                <input type="text" name="description3" placeholder="Bullet Point 3" class="form-control pt-2 mt-2" />
+
+                <div class="d-flex justify-content-start pt-3">
+                  <div class="form-control">
+                    <!--        Price Input        -->
+                    <label for="price">Product Price:</label>
+                    <input type="number" class="form-control" name="price" min="1" step="0.01" max="10000" maxlength="5">
+                  </div>
+                  <div class="form-control">
+                    <!--        Stock Input        -->
+                    <label for="stock">Available Stocks:</label>
+                    <input type="number" class="form-control" name="stock" min="1" max="10000" maxlength="5" >
+                  </div>
+                </div>
+
+
+                <!--        Color Input        -->
+                <div class="d-flex justify-content-start mt-3">
+                  <div class="input-group pe-2">
+                    <label class="input-group">Custom Color - Style</label>
+                    <input class="form-control" type="text" name="color">
+                  </div>
+                </div>
+
+
+                <!--        Category Inputs        -->
+                <label style="margin-top:20px;">Product Material:</label>
+                <div class="d-flex justify-content-start">
+                  <div class="form-check pe-2">
+                    <label class="form-check-label">Wooden</label>
+                    <input class="form-check-input" type="radio" name="type" value="wooden">
+                  </div>
+                  <div class="form-check pe-2">
+                    <label class="form-check-label">Fiberglass</label>
+                    <input class="form-check-input" type="radio" name="type" value="fiberglass">
+                  </div>
+                  <div class="form-check pe-2">
+                    <label class="form-check-label">Metal</label>
+                    <input class="form-check-input" type="radio" name="type" value="metal">
+                  </div>
+                  <div class="form-check pe-2">
+                    <label class="form-check-label">Glass</label>
+                    <input class="form-check-input" type="radio" name="type" value="glass">
+                  </div>
+                  <div class="form-check pe-2">
+                    <label class="form-check-label">Bamboo</label>
+                    <input class="form-check-input" type="radio" name="type" value="bamboo">
+                  </div>
+                </div>
+
+                  <!--        Product Identifier        -->
+                <label for="identifier" style="margin-top: 20px;">Product Identifier: (Must be unique for each product!) </label>
+                <input type="text" class="form-control" maxlength="20" name="identifier" >
+
+
+                <!--        Image Upload        -->
+                <label style="margin-top:20px;" for="image-files">Add Product Images (Accepted File Types: PNG - JPG - JPEG)</label>
+                <div class="pt-3 pb-2">
+                  <label style="margin-bottom: 0px;">Main Image</label>
+                  <input type="file" name="img-files" class="form-control mt-2" >
+                </div>
+                <div class="pt-2 pb-2">
+                  <label>Second Image</label>
+                  <input type="file" name="img-files" class="form-control mt-2" >
+                </div>
+                <div class="pt-2 pb-2">
+                  <label>Third Image</label>
+                  <input type="file" name="img-files" class="form-control mt-2" >
+                </div>
+                <div class="pt-2 pb-2">
+                  <label>Fourth Image</label>
+                  <input type="file" name="img-files" class="form-control mt-2" >
+                </div>
+                <div class="pt-2 pb-2">
+                  <label>Fifth Image</label>
+                  <input type="file" name="img-files" class="form-control mt-2" >
+                </div>
+
+                <button type="submit" class="btn btn-dark w-20 mt-4">Add Product</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function showInputYes() {
+    document.getElementById("show").style.display = "block";
+  }
+  function showInputNo() {
+    document.getElementById("show").style.display = "none";
+  }
+</script>

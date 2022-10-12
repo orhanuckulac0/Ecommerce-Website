@@ -1,0 +1,44 @@
+{% include "header.html" %}
+
+<div class="container mt-5 mb-3">
+  <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
+    <div class="logo">
+      <img src="">
+    </div>
+    <form class="rounded bg-white shadow p-5 mb-5" action="{{ url_for('verify_code') }}" method="POST">
+      <h3 class="text-dark fw-bolder fs-4 mb-2">Verify the Code</h3>
+
+      <div class="fw-normal text-muted mb-4">
+        You remembered your password? <a href="{{ url_for('login') }}" class="text-primary fw-bold text-decoration-none">Sign in</a>
+      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for verify_code, message in messages %}
+            <li class="{{ verify_code }}" style="color:red; text-align: left;">{{ message }}<br></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+
+      <div class="form-floating mb-3" style="text-align: left;">
+        <input type="number" class="form-control" id="floatingInput" placeholder="Verification Code" name="code" onkeypress="return isNumberKey(event)" style="background-color: #F3F2F4;">
+        <label for="floatingInput">Verification Code</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary submit-btn-forget-pw mt-4" >Submit</button>
+      <button type="submit" class="btn btn-secondary submit-btn-forget-pw mt-4">Cancel</button>
+
+    </form>
+  </div>
+</div>
+<script>
+function isNumberKey(evt)
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && (charCode < 48 || charCode > 57))
+	return false;
+
+	return true;
+}
+</script>

@@ -1,0 +1,104 @@
+{% include "header.html" %}
+<section class="h-100 py-5 gradient-custom-2 vh-100" style="min-height: 100vh">
+  <div class="container">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-10 col-lg-8 col-xl-6">
+        <div class="card card-stepper" style="border-radius: 16px;">
+          <div class="card-header p-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2"> Order ID <span class="fw-bold text-body">{{ order_number }}</span></p>
+                <p class="text-muted mb-0"> Place On <span class="fw-bold text-body">{{ order_date.split()[0] }}</span> </p>
+              </div>
+              <div>
+                <h6 class="mb-0"> <a href="{{ url_for('order_detail_page', order_number=order_number) }}">View Order Details</a> </h6>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4">
+               <div class="">
+                   <h5>{{ user_name }}</h5>
+                   <h4 class="mt-5 theme-color mb-5">Thank you for your purchase!</h4>
+                   <span class="theme-color">Payment Summary</span>
+                   <div class="mb-3">
+                       <hr class="new1">
+                   </div>
+
+                   {% for key, value in products.items() %}
+                   <div class="d-flex justify-content-between">
+                       <span class="font-weight-bold product-title">{{ key }}</span>
+                       <span class="text-muted">${{ value }}</span>
+                   </div>
+                   {% endfor %}
+
+                   <div class="d-flex justify-content-between mt-3">
+                       <small>Shipping</small>
+                       <small>$0</small>
+                   </div>
+
+                   <div class="d-flex justify-content-between mt-3">
+                       <span class="font-weight-bold">Total</span>
+                       <span class="font-weight-bold theme-color">${{amount}}</span>
+                   </div>
+                   <div class="text-center mt-5">
+                       <a href="{{ url_for('profile') }}" class="btn btn-primary">Go to my profile</a>
+                   </div>
+                   <div class="text-center mt-3">
+                       <a class="text-muted" style="text-decoration: none;" >You will be redirected to your profile in 15 seconds.</a>
+                   </div>
+               </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+    setTimeout(function(){
+        window.location.href = '{{ url_for('order_detail_page', order_number=order_number) }}';
+    }, 15000);
+</script>
+
+
+<style>
+.theme-color{
+
+    color: #004cb9;
+}
+hr.new1 {
+    border-top: 2px dashed #fff;
+    margin: 0.4rem 0;
+}
+
+
+.btn-primary {
+    color: #fff;
+    background-color: #004cb9;
+    border-color: #004cb9;
+    padding: 12px;
+    padding-right: 30px;
+    padding-left: 30px;
+    border-radius: 1px;
+    font-size: 17px;
+}
+.gradient-custom-2 {
+/* fallback for old browsers */
+background: #a1c4fd;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
+}
+
+
+.product-title {
+  width: 500px; /* the element needs a fixed width (in px, em, %, etc) */
+  overflow: hidden; /* make sure it hides the content that overflows */
+  white-space: nowrap; /* don't break the line */
+  text-overflow: ellipsis; /* give the beautiful '...' effect */
+  }
+
+</style>

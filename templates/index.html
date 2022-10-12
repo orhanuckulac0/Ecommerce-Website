@@ -1,0 +1,106 @@
+{% block content %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+
+<div class="bg-cover bg-center bg-no-repeat vh-100 main-image-bg" style="background-image: url({{ url_for('static', filename='images/main-images/mainimg-chopsticks.jpg') }}">
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="row align-items-center min-vh-85 justify-content-center text-white">
+      <div class="col-lg-6 text-center">
+        <h1 class="display-2 fw-600 mb-2 mb-4 mt-5">SightNow Chopsticks</h1>
+        <p class="lead main-img-p mb-4" style="color: gray;">Our chopsticks are made of the best quality materials, and they can be used for years.</p>
+        <div class="pt-2">
+            <a class="btn btn-dark discover-more-button" href="{{ url_for('products') }}" tabindex="0">
+          All Products
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--category links-->
+<!--category links-->
+
+
+<!--New arrivals-->
+<section class="cards py-2" style="background-color: white;">
+  <div class="d-flex justify-content-center pt-5 pb-3">
+      <h4>New Arrivals</h4>
+  </div>
+  <div class="d-flex justify-content-center">
+      <h5 style="color: gray; width: 60%;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto culpa eligendi ex explicabo harum illum itaque magnam officia perspiciatis quasi qui, repellat soluta, sunt totam vitae voluptas voluptatem. Assumenda, illo.</h5>
+  </div>
+<!--New arrivals-->
+
+
+<!--container for all products-->
+<div class="container mb-5 mt-5">
+    <div class="row pb-2">
+<!--        card 1-->
+        {% for product in products: %}
+          <div class="col-lg-4 col-md-12 mb-4">
+            <div class="card product-card h-100">
+              <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
+                data-mdb-ripple-color="light">
+                <a href="{{ url_for('product', id=product.id, product_identifier=product.product_identifier) }}"><img src="{{ product.main_img_path }}"
+                  class="w-100 product-card-img text-center" /></a>
+              </div>
+              <div class="card-body" style="padding-bottom: 10px;">
+
+                <div class="ms-auto text-warning text-center mb-1">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                </div>
+                <h5 class="text-dark text-center text-muted mb-2 mt-2">${{ product.price }}</h5>
+
+                <div class="d-flex justify-content-center mb-3">
+                  <h5 class="mb-0 text-center">{{ product.title }}</h5>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-danger btn-sm" type="button"
+                       href="{{ url_for('add_fav',
+                         product_id=product.id,
+                          product_identifier=product.product_identifier,
+                           price=product.price,
+                            color='None Selected',
+                             quantity=1,
+                              total_price=product.price) }}"
+                    >
+                        <i class="fa-solid fa-heart"></i>
+                    </a>
+                    {% if product.stock == 0: %}
+                    <button class="btn" disabled><i class="fa-solid fa-cart-shopping"></i></button>
+                    {% else: %}
+                    <a class="btn btn-success btn-sm" type="button"
+                       href="{{ url_for('add_to_cart',
+                        product_id=product.id,
+                         product_identifier=product.product_identifier,
+                          price=product.price,
+                           color='None Selected',
+                            quantity=1,
+                             total_price=product.price) }}"
+                    >
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <!--        card1 ends here-->
+
+
+    </div>
+</div>
+<!--container for all product's ends-->
+</section>
+{% endblock %}
+
+
+

@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row">
+    <!-- Customer Sidebar-->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-2">
+    <h5>My Account</h5>
+      <div class="customer-sidebar card border-0">
+<!--        <div class="customer-profile">-->
+<!--          <a class="d-inline-block" href="#">-->
+<!--            <img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt="">-->
+<!--          </a>-->
+<!--          <h5 class="pt-3 pl-5 user-name-profile">Julie Trnka</h5>-->
+<!--          <p class="text-muted text-sm mb-0 user-address-profile">Ostrava, Czech Republic</p>-->
+<!--        </div>-->
+        <nav class="list-group">
+          <a class="list-group-item group-item-action" href="{{ url_for('profile') }}">
+            <span><i class="fa-solid fa-bag-shopping"></i> Orders</span>
+          </a>
+          <a class="list-group-item group-item-action" href="{{ url_for('return_order_detail_page') }}">
+            <span><i class="fa-solid fa-bag-shopping"></i> Returns</span>
+          </a>
+          <a class="list-group-item group-item-action" href="{{ url_for('favourites') }}">
+            <span><i class="fa-solid fa-bag-shopping"></i> Favourites</span>
+          </a>
+          <a class="list-group-item group-item-action" href="{{ url_for('user_addresses') }}">
+            <span><i class="fa-solid fa-map-location-dot"></i> Addresses</span>
+          </a>
+          <a class="list-group-item group-item-action" href="{{ url_for('user_billing_addresses') }}">
+            <span><i class="fa-solid fa-map-location-dot"></i> Billing Addresses</span>
+          </a>
+          <a class="list-group-item group-item-action" href="{{ url_for('profile_settings') }}">
+            <span><i class="fa-solid fa-heart"></i> Profile Settings</span>
+          </a>
+          <a class="list-group-item group-item-action" href="#">
+              <span><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</span>
+            </a>
+        </nav>
+      </div>
+    </div>

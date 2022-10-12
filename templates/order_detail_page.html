@@ -1,0 +1,260 @@
+{% include "header.html" %}
+
+<div class="container mt-5">
+  {% include "profile_info_left.html" %}
+  <!-- /Customer Sidebar-->
+    <div class="col-lg-8 col-xl-9">
+      <div class="ms-4 mt-4">
+        <h5>Order Number: {{ order_number }} </h5>
+      </div>
+      {% for order_det in order_details: %}
+        <section style="background-color: eee;">
+          <div class="container py-3 w-100">
+            <div class="row justify-content-center mb-3">
+              <div class="col-md-12 col-xl-12">
+                <div class="card shadow-0 border rounded-3">
+                  <div class="card-body position relative">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+                    style="font-size: 15px;">{{ order_det.quantity }}</span>
+                    <div class="row">
+                      <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                        <div class="bg-image">
+                          <a href="{{ url_for('product', id=order_det.product_id, product_identifier=order_det.product_identifier) }}">
+                          <img src="/{{ order_det.main_img_path }}"
+                            class="w-100"/>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-6 col-xl-6">
+                        <h5 class="text-truncate">{{ order_det.title }}</h5>
+                        <div class="d-flex flex-row">
+                          <div class="text-danger mb-1 me-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                          </div>
+                          <span>310</span>
+                        </div>
+                        <div class="mt-3 mb-0 text-muted small">
+                          <span class="text-dark lh-lg"> • </span><span>Color: {{ order_det.color }}</span>
+                          <br>
+                          <span class="text-dark lh-lg"> • </span><span>Quantity: {{ order_det.quantity }}</span>
+                          <br>
+                          <span class="text-dark lh-lg"> • </span><span>Unit Price: ${{ order_det.price }}</span>
+                        </div>
+
+                        <div class="mt-4">
+                        {% if order_det.order_status == "Being Prepared" %}
+                          <p class="fw-bold" style="color: gray;">Order Status: <span class="badge p-2 text-uppercase bg-warning" style="color: black;">{{ order_det.order_status }}</span></p>
+                        {% elif order_det.order_status == "Shipped" %}
+                          <p class="fw-bold" style="color: gray;">Order Status: <span class="badge p-2 text-uppercase bg-primary">{{ order_det.order_status }}</span></p>
+                        {% elif order_det.order_status == "Delivered" %}
+                          <p class="fw-bold" style="color: gray;">Order Status: <span class="badge p-2 text-uppercase bg-success">{{ order_det.order_status }}</span></p>
+                        {% elif order_det.order_status == "Cancelled" or  order_det.order_status == "Return Opened"%}
+                          <p class="fw-bold" style="color: gray;">Order Status: <span class="badge p-2 text-uppercase bg-danger">{{ order_det.order_status }}</span></p>
+                        {% endif %}
+                        </div>
+
+
+                      </div>
+                      <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                        <div class="d-flex flex-row mb-1">
+                          <h4 class="mb-1 me-1">${{ order_det.total_price }}</h4>
+                        </div>
+                        <h6 class="text-success">Free shipping</h6>
+                        <div class="d-flex flex-row mt-4 ms-3">
+                          <div class="col" >
+                            <div class="row ">
+                              {% if order_det.order_status == "Shipped" or order_det.order_status == "Delivered" %}
+                              <a href="{{ url_for('order_tracking_page',
+                               order_number= order_det.order_number,
+                                order_detail_id=order_det.id,
+                                 user_id=current_user.id) }}" class="btn btn-primary btn-sm" style="width: auto;">Track Item</a>
+                              {% else: %}
+                              <button class="btn btn-primary btn-sm" style="width: auto;" disabled>Track Item</button>
+                              {% endif %}
+                            </div>
+
+                            <div class="row ">
+                              {% if order_det.order_status == "Delivered" or order_det.order_status == "Return Opened" %}
+                                {% if order_det.quantity - order_det.returned_quantity == 0: %}
+                              <button class="btn btn-warning btn-sm mt-3" type="button" style="width: auto;"
+                                      data-bs-toggle="modal" data-bs-target="#OrderReturn{{order_det.id}}" disabled>Return Item</button>
+                                {% else: %}
+                              <button class="btn btn-warning btn-sm mt-3" type="button" style="width: auto;"
+                                      data-bs-toggle="modal" data-bs-target="#OrderReturn{{order_det.id}}">Return Item</button>
+                                {% endif %}
+                              {% else: %}
+                              <button class="btn btn-warning btn-sm mt-3" type="button" style="width: auto;"
+                                      data-bs-toggle="modal" data-bs-target="#OrderReturn{{order_det.id}}" disabled>Return Item</button>
+                              {% endif %}
+                            </div>
+
+                            <div class="row ">
+                              {% if order_det.order_status == "Cancelled" or order_det.order_status == "Delivered" or order_det.order_status == "Shipped" or order_det.order_status == "Return Opened":%}
+                              <button class="btn btn-danger btn-sm mt-3" type="submit" style="width: auto;"
+                                      data-bs-toggle="modal" data-bs-target="#CancelOrder{{order_det.id}}" disabled> Cancel Order</button>
+                              {% else: %}
+                              <button class="btn btn-danger btn-sm mt-3" type="submit" style="width: auto;"
+                                      data-bs-toggle="modal" data-bs-target="#CancelOrder{{order_det.id}}"> Cancel Order</button>
+                              {% endif %}
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+                         <!-- Modal for Cancel Order Warning-->
+        <div class="modal fade" id="CancelOrder{{order_det.id}}" tabindex="-1" aria-labelledby="CancelOrderLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="CancelOrderLabel">Cancel Purchase Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{{ url_for('cancel_order',
+               order_number=order_det.order_number,
+               order_id=order_det.order_id,
+                order_detail_id=order_det.id,
+                 product_id=order_det.product_id,
+                  product_identifier=order_det.product_identifier,
+                   user_id=current_user.id) }}"
+                    method="POST">
+                <div class="modal-body">
+                  Do you want to cancel this purchase?
+                  <br>
+                  <span class="text-dark lh-lg"> • </span><i>If your order has been shipped, you can't cancel it.</i>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-danger" name="cancel_purpose" value="order">Cancel Purchase</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+                   <!-- Modal for Return Order Details-->
+         <div class="modal fade" id="OrderReturn{{order_det.id}}" tabindex="-1" aria-labelledby="OrderReturnLabel" aria-hidden="true">
+           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <h5 class="modal-title" id="OrderReturnLabel">Order Return</h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                 <form action="{{ url_for(
+                 'return_order',
+                  order_number=order_det.order_number,
+                   order_det_id=order_det.id,
+                   product_identifier=order_det.product_identifier
+                   )
+                    }}" method="POST">
+                     <section style="background-color: eee;">
+                     <div class="container py-3 w-100">
+                       <div class="row justify-content-center mb-3">
+                         <div class="col-md-12 col-xl-12">
+                           <div class="card shadow-0 border rounded-3">
+                             <div class="card-body position relative">
+                               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+                               style="font-size: 15px;">{{ order_det.quantity }}</span>
+                               <div class="row">
+                                 <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                                   <div class="bg-image">
+                                     <a href="{{ url_for('product', id=order_det.product_id, product_identifier=order_det.product_identifier) }}">
+                                     <img src="/{{ order_det.main_img_path }}"
+                                       class="w-100" />
+                                     </a>
+                                   </div>
+                                 </div>
+                                 <div class="col-md-6 col-lg-6 col-xl-6">
+                                   <h5 class="text-truncate">{{ order_det.title }}</h5>
+                                   <div class="d-flex flex-row">
+                                     <div class="text-danger mb-1 me-2">
+                                       <i class="fa fa-star"></i>
+                                       <i class="fa fa-star"></i>
+                                       <i class="fa fa-star"></i>
+                                       <i class="fa fa-star"></i>
+                                     </div>
+                                     <span>310</span>
+                                   </div>
+                                   <input type="hidden" name="order_det_id" value="{{ order_det.id }}">
+                                   <div class="mt-2 mb-2 text-muted small">
+                                     <span>Selected Color: {{ order_det.color }}</span>
+                                   </div>
+                                   <div class="mt-2 mb-2 text-muted small">
+                                     <span>Purchased Quantity: {{ order_det.quantity }}</span>
+                                   </div>
+                                   <div class="mt-2 mb-2 text-muted small">
+                                     <a>Unit Cost: ${{ order_det.price }}</a>
+                                   </div>
+                                   <div class="mt-2 mb-2 text-muted small">
+                                     <a>Total Cost: ${{ order_det.total_price }}</a>
+                                   </div>
+
+                              <!--           hidden inputs-->
+
+                                 </div>
+                                 <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                                   <div class="d-flex flex-row align-items-center mb-1">
+                                     <h4 class="mb-1 me-1">${{ order_det.price }}</h4>
+                                   </div>
+
+                                   <h6 class="text-success">Free shipping</h6>
+                                   <div class="d-flex flex-column mt-4">
+                                     <select class="form-select" name="return_reason" required>
+                                       <option value="Broken">Broken</option>
+                                       <option value="Didn't Like">Didn't like it</option>
+                                     </select>
+
+
+                                     <select class="form-select" name="returned_quantity" required>
+                                       {% if order_det.id in return_det_ids %}
+                                         {% for return in returns: %}
+                                           {% if return.order_detail_id == order_det.id %}
+                                             {% set remaining = order_det.quantity-order_det.returned_quantity %}
+                                               {% if remaining == 0: %}
+                                                 <option value="0" class="return_quantity" disabled selected>0</option>
+                                               {% else: %}
+                                                  {% for n in range(remaining) %}
+                                                    <option value="{{ loop.index }}">{{ loop.index }}</option>
+                                                  {% endfor %}
+                                             {% endif %}
+                                           {% endif %}
+                                         {% endfor %}
+                                       {% else: %}
+                                         {% for n in range(order_det.quantity) %}
+                                          <option value="{{ loop.index }}">{{ loop.index }}</option>
+                                          {% endfor %}
+                                       {% endif %}
+                                     </select>
+                                     <button class="btn btn-warning btn-sm mt-3" type="submit"> Return</button>
+                                   </div>
+                                 </div>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     </section>
+                 </form>
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               </div>
+             </div>
+           </div>
+         </div>
+        {% endfor %}
+    </div>
+</div>

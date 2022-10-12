@@ -1,0 +1,154 @@
+{% include "header.html" %}
+
+<section class="vh-100 gradient-custom-2">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
+        <div class="card card-stepper mt-3" style="border-radius: 16px;">
+          <div class="card-header p-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2"> Order ID: <span class="fw-bold text-body">
+                  <a href="{{ url_for('order_detail_page', order_number=order_detail.order_number) }}" style="text-decoration: none;">{{ order_detail.order_number }}</a></span>
+                </p>
+                <p class="text-muted mb-2"> Purchase Date: <span class="fw-bold text-body">{{ order.order_date.split()[0] }}</span> </p>
+              <p class="text-muted mb-0">Delivery Date: <span class="text-body fw-bold">{{ order_tracking.expected_delivery_date }}</span></p>
+
+              </div>
+              <div class="d-flex">
+                <div class="col">
+                  <div class="row">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#DeliveryAddressesModal{{ order_tracking.id }}">
+                  Delivery Address
+                </button>
+
+                  </div>
+                  <div class="row mt-4">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#BillingAddressesModal{{ order_tracking.id }}">
+                  Billing Address
+                </button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex flex-row mb-4 pb-2">
+              <div class="flex-fill">
+                <h5 class="bold">{{ order_detail.title }}</h5>
+                <p class="text-muted"> Quantity: {{ order_detail.quantity }} item</p>
+                <h4 class="mb-3"> ${{ order_detail.total_price }} </h4>
+                <p class="text-muted">Tracking Status: <span class="text-body fw-bold">{{ order_detail.order_status }}</span></p>
+                <p class="text-muted">Tracking Number: <span class="text-body fw-bold">{{ order_tracking.tracking_number }}</span></p>
+                <p class="text-muted">Carrier Company: <span class="text-body fw-bold">{{ order_tracking.shipping_company }}</span></p>
+              </div>
+
+              <div class="product-img">
+                <a href="{{ url_for('product', id=order_detail.product_id, product_identifier=order_detail.product_identifier) }}">
+                <img class="align-self-center img-fluid"
+                  src="/{{ order_detail.main_img_path }}" width="250">
+                </a>
+              </div>
+            </div>
+
+            <div class="progress">
+              {% if order_tracking.shipment_status == "Being Prepared" %}
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width: 15%"></div>
+              {% elif order_tracking.shipment_status == "Shipped" %}
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+              {% elif order_tracking.shipment_status == "Delivered" %}
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+              {% endif %}
+            </div>
+            <div class="row d-flex mt-1 text-muted fw-bold">
+              <div class="col justify-content-start">
+                Being Prepared
+              </div>
+              <div class="col justify-content-center text-center">
+                Shipped
+              </div>
+              <div class="col justify-content-end ms-auto text-end">
+                Delivered
+              </div>
+            </div>
+
+          </div>
+          <div class="card-footer p-3 mt-2">
+            <div class="d-flex justify-content-between">
+              <h5 class="fw-normal mb-0" >
+                <a href="{{ url_for('order_detail_page', order_number=order_detail.order_number) }}" style="text-decoration: none; color:black;"><i class="fa-solid fa-arrow-left"></i> Previous Page</a>
+              </h5>
+              <h5 class="fw-normal mb-0">
+                <a href="#!" style="text-decoration: none; color:black;"><i class="fa-solid fa-truck-fast"></i> Carrier Website</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+    .gradient-custom-2 {
+/* fallback for old browsers */
+background: #a1c4fd;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
+}
+
+.card-stepper {
+z-index: 0
+}
+</style>
+<!--                          Modal for Address Details-->
+<div class="modal fade" id="DeliveryAddressesModal{{order_tracking.id}}" tabindex="-1" aria-labelledby="DeliveryAddressesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeliveryAddressesModalLabel">{{ order_tracking.delivery_address.split()[0] }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ order_tracking.receiver_name }}</li>
+            <li class="list-group-item">+{{ order_tracking.receiver_contact_number }}</li>
+            <li class="list-group-item">{{ order_tracking.delivery_address }}</li>
+
+          </ul>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--                          Modal for Address Details-->
+<div class="modal fade" id="BillingAddressesModal{{order_tracking.id}}" tabindex="-1" aria-labelledby="BillingAddressesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="BillingAddressesModalLabel">{{ order_tracking.billing_address.split()[0] }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <div class="modal-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ order_tracking.receiver_name }}</li>
+            <li class="list-group-item">+{{ order_tracking.receiver_contact_number }}</li>
+            <li class="list-group-item">{{ order_tracking.billing_address }}</li>
+          </ul>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+

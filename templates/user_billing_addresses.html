@@ -1,0 +1,191 @@
+{% include "header.html" %}
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+          {% include "profile_info_left.html" %}
+            {% if billing_address_list != "" %}
+            {% for address in billing_address_list: %}
+              <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card" style="width: 18rem;">
+                  <div class="card-header">
+                      {{ address.address_title }}
+                  </div>
+                    <div class="card-body">
+                      <p class="card-text" style="margin:0;">Address: {{ address.address_line }} </p>
+                      <p class="card-text" style="margin:0;">City: {{ address.city }} </p>
+                      <p class="card-text" style="margin:0;">State: {{ address.state }} </p>
+                      <p class="card-text" style="margin:0;">Postal Code: {{ address.postal_code }} </p>
+                      <p class="card-text" style="margin:0;">Country: {{ address.country }} </p>
+                      <p class="card-text" style="margin:0;">Name: {{ address.name }} </p>
+                      <p class="card-text" style="margin:0;">Surname: {{ address.surname }} </p>
+                      <p class="card-text" style="margin:0;">+{{ address.phone_number_ext }} {{ address.phone_number }} </p>
+                      <div class="d-flex justify-content-between">
+                        <a href="#" class="btn btn-success mt-1" data-bs-toggle="modal" data-bs-target="#editAddress{{address.id}}">Edit</a>
+                        <a href="#" class="btn btn-danger mt-1" data-bs-toggle="modal" data-bs-target="#deleteAddress{{address.id}}">Delete</a>
+
+                                                    <!-- Modal for Delete Address -->
+                          <div class="modal fade" id="deleteAddress{{address.id}}" data-bs-backdrop="static" tabindex="-1" data-bs-keyboard="false" aria-labelledby="deleteAddressLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="deleteAddressLabel">Delete</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="No"></button>
+                                </div>
+                                <div class="modal-body">
+                                  Are you sure to delete this address?
+                                    {{ address.address_title }}
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                                  <a type="submit" class="btn btn-danger" href="{{ url_for('delete_address', address_id=address.id, address_type='billing') }}">Yes</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                                                    <!-- Modal for Edit Address -->
+                          <div class="modal fade" id="editAddress{{address.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editAddressLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="editAddressLabel">Update: {{ address.address_title }}</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="{{ url_for('edit_address', address_id=address.id, address_type='billing') }}" method="POST">
+                                    <div class="row mt-2">
+                                      <div class="col-md-12 pt-1">
+                                          <label class="labels">Address Title</label>
+                                          <input type="text" class="form-control" value="{{address.address_title}}" name="address_title" maxlength="30" required/>
+                                      </div>
+                                      <div class="col-md-12 pt-1">
+                                          <label class="labels">Address Line</label>
+                                          <input type="text" class="form-control" value="{{ address.address_line }}" name="address_line" maxlength="50" required/>
+                                      </div>
+
+                                      <div class="col-md-6 pt-2">
+                                          <label class="labels">City</label>
+                                          <input type="text" class="form-control" value="{{ address.city }}" name="city" maxlength="15" required/>
+                                      </div>
+                                      <div class="col-md-6 pt-2">
+                                          <label class="labels">State</label>
+                                          <input type="text" class="form-control" value="{{ address.state }}" name="state" maxlength="15" required/>
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                      <div class="col-md-6">
+                                          <label class="labels">Postal Code</label>
+                                          <input type="text" class="form-control" value="{{ address.postal_code }}" name="postal_code" maxlength="15" required/>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="labels">Country</label>
+                                          <input type="text" class="form-control" value="{{ address.country }}" name="country" maxlength="15" required/>
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                      <div class="col-md-6">
+                                        <label class="labels">Name</label>
+                                        <input type="text" class="form-control" value="{{ address.name }}" name="name" maxlength="20" required/>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels">Surname</label>
+                                        <input type="text" class="form-control" value="{{ address.surname }}" name="surname" maxlength="15" required/>
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                      <label class="labels">Mobile Number</label>
+
+                                      <div class="col-md-4">
+                                          <input type="text" class="form-control" value="{{ address.phone_number_ext }}" name="phone_number_ext" pattern="[0-9]+" maxlength="5" required/>
+                                      </div>
+                                      <div class="col-md-8">
+                                          <input type="text" class="form-control" value="{{ address.phone_number }}" name="phone_number" pattern="[0-9]+" maxlength="15" required/>
+                                      </div>
+                                    </div>
+                                  <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                  </div>
+
+                                  </form>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+          {% endif %}
+                            <!--        Add New User Address Form -->
+          <div class="col-lg-4 col-md-6 col-sm-6 border-right" style="border: 2px solid #eee; max-width: 18rem;">
+            <div class="d-flex justify-content-between align-items-center mb-3 pt-2">
+                <h4 class="pt-2">Add New Billing Address</h4>
+            </div>
+
+            <form action="{{ url_for('add_user_address') }}" method="POST">
+              <div class="row mt-2">
+                <div class="col-md-12 pt-1">
+                    <label class="labels">Address Title</label>
+                    <input type="text" class="form-control" placeholder="" name="address_title" maxlength="20" required>
+                </div>
+                <div class="col-md-12 pt-1">
+                    <label class="labels">Address Line</label>
+                    <input type="text" class="form-control" placeholder="" name="address_line" maxlength="40" required>
+                </div>
+
+                <div class="col-md-6 pt-2">
+                    <label class="labels">City</label>
+                    <input type="text" class="form-control" placeholder="" name="city" maxlength="15" required>
+                </div>
+                <div class="col-md-6 pt-2">
+                    <label class="labels">State</label>
+                    <input type="text" class="form-control" placeholder="" name="state" maxlength="15" required>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                    <label class="labels">Postal Code</label>
+                    <input type="text" class="form-control" placeholder="" name="postal_code" maxlength="10" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="labels">Country</label>
+                    <input type="text" class="form-control" placeholder="" name="country" maxlength="15" required>
+                </div>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col-md-6">
+                  <label class="labels">Name</label>
+                  <input type="text" class="form-control" placeholder="" name="name" maxlength="20" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="labels">Surname</label>
+                  <input type="text" class="form-control" placeholder="" name="surname" maxlength="15" required>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <label class="labels">Mobile Number</label>
+
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="+" name="phone_number_ext" pattern="[0-9]+" maxlength="5" required>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" placeholder="" name="phone_number" pattern="[0-9]+" maxlength="15" required>
+                </div>
+              </div>
+
+              <button class="btn btn-primary profile-button float-start mt-4 mb-3" name="address_type" value="billing" type="submit">Add New Billing Address</button>
+            </form>
+             </div>
+        </div>
+    </div>
+</div>
+
