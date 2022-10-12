@@ -11,3 +11,5 @@ I will be adding these below:
 1- Cancel order, cancel refund request functions to admin functions. I postponed it to the end because I didn't want to deal with test orders just to cancel them at that point.
 
 2- Notify customer by email when order is being prepared, shipped, delivered, if their return request is accepted or denied, if order is cancelled.
+
+3- Add close_account func for users
