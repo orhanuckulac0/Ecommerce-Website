@@ -1512,7 +1512,7 @@ def inventory(filter_by):
         for p in products_all:
             assign_dict[p] = p.product_identifier
 
-        sorted_dict = dict(sorted(assign_dict.items(), key=lambda item: item[1]))
+        sorted_dict = dict(sorted(assign_dict.items(), key=lambda p_item: p_item[1]))
         products_all.clear()
 
         for key, value in sorted_dict.items():
@@ -1525,7 +1525,7 @@ def inventory(filter_by):
         for p in products_all:
             assign_dict[p] = p.product_type
 
-        sorted_dict = dict(sorted(assign_dict.items(), key=lambda item: item[1]))
+        sorted_dict = dict(sorted(assign_dict.items(), key=lambda p_item: p_item[1]))
         products_all.clear()
 
         for key, value in sorted_dict.items():
@@ -1560,13 +1560,15 @@ def update_inventory():
 
                 # change the price on all carts
                 for item in carts:
-                    if item.product_id == current_product.id and item.product_identifier == current_product.product_identifier:
+                    if item.product_id == current_product.id and\
+                            item.product_identifier == current_product.product_identifier:
                         item.price = float(price)
                         item.total_price = item.quantity * float(price)
 
                 # change the price on all favourites
                 for item in favs:
-                    if item.product_id == current_product.id and item.product_identifier == current_product.product_identifier:
+                    if item.product_id == current_product.id and\
+                            item.product_identifier == current_product.product_identifier:
                         item.price = float(price)
                         item.total_price = item.quantity * float(price)
 
@@ -1784,10 +1786,6 @@ def handle_return_request(action, order_number, order_detail_id, user_id):
 def admin_cancelled_orders():
     cancelled_orders = CancelledOrders.query.all()
     return render_template("admin_cancelled_orders.html", orders=cancelled_orders)
-
-@app.route("/test", methods=["GET"])
-def test():
-    return render_template("test.html")
 
 
 if __name__ == "__main__":
